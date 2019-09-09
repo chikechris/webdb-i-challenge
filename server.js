@@ -1,15 +1,23 @@
-const express = require('express');
+const express = require('express')
 
-const AcctRouter = require('./accounts/account-router')
+const db = require('./data/dbConfig.js')
 
-const server = express();
+const server = express()
 
-server.use(express.json());
+server.use(express.json())
 
-server.use('/api/account', AcctRouter)
-
-server.use('/', (req, res) => {
-  res.send('<h1>Web dataBase Page</h1>')
+server.get('/', (req, res) => {
+  res.status(200).send('App is Up!!!')
 })
 
-module.exports = server;
+server.get('/accounts', (req, res) => {
+  db('accounts')
+    .then(results => {
+      res.status(200).json(results)
+    })
+    .catch(error => {
+      res.status(500).json(error)
+    })
+})
+
+module.exports = server
