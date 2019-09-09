@@ -35,8 +35,32 @@ server.get('/accounts/:id', (req, res) => {
 server.post('/accounts', (req, res) => {
   db('accounts')
     .insert(req.body, 'id')
-    .then(([counts]) => {
-      res.status(200).json({ message: `record of id ${counts} added` })
+    .then(([results]) => {
+      res.status(200).json({ message: `record of id ${results} added` })
+    })
+    .catch(error => {
+      res.status(500).json(error)
+    })
+})
+
+server.delete('/accounts/:id', (req, res) => {
+  db('accounts')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+      res.status(200).json({ message: `deleted ${count} records` })
+    })
+    .catch(error => {
+      res.json(error)
+    })
+})
+
+server.put('/accounts/:id', (req, res) => {
+  db('accounts')
+    .where({ id: req.params.id })
+    .update(req.body)
+    .then(results => {
+      res.status(200).json({ message: `${results} records modified` })
     })
     .catch(error => {
       res.status(500).json(error)
