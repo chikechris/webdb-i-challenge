@@ -32,4 +32,15 @@ server.get('/accounts/:id', (req, res) => {
     })
 })
 
+server.post('/accounts', (req, res) => {
+  db('accounts')
+    .insert(req.body, 'id')
+    .then(([counts]) => {
+      res.status(200).json({ message: `record of id ${counts} added` })
+    })
+    .catch(error => {
+      res.status(500).json(error)
+    })
+})
+
 module.exports = server
